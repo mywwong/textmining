@@ -290,33 +290,15 @@ d3.json("<?php echo $user_name; ?>" + ".json", function(error, root) {
   }
 
   circle.on("mouseover", function (d) { compbc(d); })
-  		.on("mouseout", function () { resetting(); });
-  
+  .on("mouseout", function(d) { circle.style("fill", function(d) { return d.children ? color(d.depth) : null; }); chart2.selectAll("*").remove();});
 
-    
-  function resetting() {
-  		circle.style("fill", function(d) { return d.children ? color(d.depth) : null; });
-  		chart2.selectAll("*").remove();
-        zoom(focus);
-  }
-  
   var chilist = [];
   function compbc(d) {
 
 	  preid = d.id;
-	  circle.style("fill", function(d) { return d.id === preid ? "red" : color(d.depth); });
-
-	  d3.selectAll("text").transition().duration(500)
-	  .each("start", function(d) { this.style.display = "none"; d3.select(this).style("fill-opacity", 1); })
-      .each("end", function() {       
-	  		for (j = 0; j < d.children.length; j++) {		   
-		   		var subid = d.children[j].id;
-		   		text.filter(function(d) { return d.id === subid; })
-			   		.style("display", "inline")
-		  	   		.style("fill-opacity", 1);   
-	  		}
-	  });
-  	  
+	  
+	  circle.style("fill", function(d) { return d.id === preid ? "red" : color(d.depth); })
+	       
 	  count = 0;
 
 	  for (i = 0; i < nodes.length; i++) {
@@ -373,4 +355,4 @@ d3.select(self.frameElement).style("height", diameter + "px");
 
 </script>
 
-<!-- <div id="DLG" onclick="DLgraph()">Download the SVG</div> -->
+<div id="DLG" onclick="">Show the comparsion by level</div>
