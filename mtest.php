@@ -118,7 +118,7 @@ var chart1 = d3.select("body").append("svg")        //Insert "svg" tag to html
 
 //Setting of Chart2
 var margin2 = {top: 100, right: 20, bottom: 70, left: 40},
-width = 500 - margin2.left - margin2.right,
+width = 900 - margin2.left - margin2.right,
 height = 500 - margin2.top - margin2.bottom;
 
 //Parse the date / time
@@ -289,30 +289,33 @@ d3.json("<?php echo $user_name; ?>" + ".json", function(error, root) {
     });
   }
 
-  circle.on("mouseover", function (d) { compbc(d); })
+  circle.on("mouseover", function (d) { chart2.selectAll("*").remove(); compbc(d); })
   .on("mouseout", function(d) { circle.style("fill", function(d) { return d.children ? color(d.depth) : null; }); chart2.selectAll("*").remove();});
 
-  var chilist = [];
+  
   function compbc(d) {
 
 	  preid = d.id;
 	  
-	  circle.style("fill", function(d) { return d.id === preid ? "red" : color(d.depth); })
+	  circle.style("fill", function(d) { return d.id === preid ? "red" : color(d.depth); });
+	  var chilist = [];  
+	  var temparray = [];
+	  temparray = d.children;
 	       
 	  count = 0;
 
-	  for (i = 0; i < nodes.length; i++) {
-		  if (nodes[i].id === d.id) {
-			chilist[count] = {id:count,name:nodes[i].name,size:nodes[i].size,status:(count===0? "Pre" : "Post")};
+	  for (i = 0; i < temparray.length; i++) {
+		  //if (temparray[i].id === d.id) {
+			chilist[count] = {id:count,name:temparray[i].name,size:temparray[i].size/*,status:(count===0? "Pre" : "Post")*/};
 		  	count++;
-		  }
+		  //}
 	  }
 
 	 chart2.selectAll("text")
 	    .data(chilist)
 	    .enter().append("text")
 	    .attr("y", function(d) { return y(d.size); })
-	    .attr("x", function(d) { return 100 + d.id*210; })
+	    .attr("x", function(d) { return 10 + d.id*20; })
 	    .attr("dx", -5)
 	    .attr("dy", ".36em")
 	    .attr("text-anchor", "end")
@@ -322,8 +325,8 @@ d3.json("<?php echo $user_name; ?>" + ".json", function(error, root) {
 	    .data(chilist)
     	.enter().append("rect")
 		.style("fill", "steelblue")
-		.attr("width", 40)
-	    .attr("x", function(d) { return 100 + d.id*210; })
+		.attr("width", 10)
+	    .attr("x", function(d) { return 10 + d.id*20; })
      	.attr("y", function(d) { return y(d.size); })
      	.attr("height", function(d) { return height - y(d.size); });
 
@@ -336,7 +339,7 @@ d3.json("<?php echo $user_name; ?>" + ".json", function(error, root) {
       	.attr("class", "y axis")
 	    .call(yAxis);
       
-	  x.domain(chilist.map(function(d) { return d.status; }));
+	  x.domain(chilist.map(function(d) { return d.name; }));
 	  y.domain([0, d3.max(nodes, function(d) { return d.size; })]);
   }
 
